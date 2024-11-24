@@ -46,7 +46,7 @@ pipeline {
                     echo "Create cert persistent volumes"
                     kubectl apply -f /home/hieupt/free5gc-helm/cert-pv.yaml
 
-                    if kubectl get pv | grep mongo-pv; then
+                    if kubectl get pv | grep -q mongo-pv; then
                         echo "Mongo persistent volumes already exist"    
                     else
                         echo "Create mongo persistent volume"
