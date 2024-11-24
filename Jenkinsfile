@@ -78,7 +78,7 @@ pipeline {
                     retry=0
                     while true; do
                         sleep 10
-                        podNumber=$( kubectl get pods -n free5gc --no-headers | grep -v Running | wc -l)
+                        podNumber=$( kubectl get pods -n free5gc --no-headers | grep -v Running | grep -v Terminating| wc -l)
                         if [ $podNumber -eq 0 ]; then
                             echo "All pods start."
                             break
@@ -86,7 +86,7 @@ pipeline {
                             echo "Recreating pods..."
                             if [ $retry -le 5 ]; then
                                 retry=$((retry + 1))
-                                pods=$( kubectl get pods -n free5gc --no-headers | grep -v Running | awk '{ print $1 }')
+                                pods=$( kubectl get pods -n free5gc --no-headers | grep -v Running | grep -v Terminating | awk '{ print $1 }')
                                 for pod in $pods; do
                                     kubectl delete pod -n free5gc $pod
                                 done  
