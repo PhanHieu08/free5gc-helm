@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: cert-pv
+  labels:
+    project: free5gc
+spec:
+  capacity:
+    storage: 50Mi  # Adjust to match the PVC's request
+  accessModes:
+    - ReadOnlyMany
+  hostPath:
+    path: /mnt/disks/cert-pv  # Adjust for your storage type (e.g., NFS, cloud storage)
+  persistentVolumeReclaimPolicy: Retain
