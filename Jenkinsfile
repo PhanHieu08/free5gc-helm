@@ -13,9 +13,24 @@ pipeline {
                         echo "Uninstalling existing Helm release..."
                         helm uninstall free5gc-helm --namespace free5gc
                         
+                        # Wait for all pods to terminate
+                        echo "Waiting for pods to terminate..."
+                        timeout=15 # Set timeout in seconds
+                        while [ $timeout -gt 0 ]; do
+                            pods=$(kubectl get pods -n my-namespace --no-headers | wc -l)
+                            if [ $pods -eq 0 ]; then
+                                echo "All pods have been terminated."
+                                break
+                            else
+                                echo "Pods still terminating. Waiting..."
+                                sleep 2
+                                timeout=$((timeout-2))
+                            fi
+                        done
+                        
                     else
                         echo "No existing release found. Skipping uninstall."
-                    fi
+                    fi    
                     '''
                 }
             }
@@ -29,13 +44,15 @@ pipeline {
                     else
                         echo "Create cert persistent volumes"
                         kubectl apply -f /home/hieupt/free5gc-helm/cert-pv.yaml
-                    
+                    fi
+
                     if kubectl get pv | grep mongo-pv; then
                         echo "Mongo persistent volumes already exist"    
                     else
                         echo "Create mongo persistent volume"
                         kubectl apply -f /home/hieupt/free5gc/helm/mongo-pv.yaml
-                    
+                    fi
+
                     echo "Installing Helm release..."
                     helm install free5gc-helm /home/hieupt/free5gc-helm/charts/free5gc/ -n free5gc
                     '''
