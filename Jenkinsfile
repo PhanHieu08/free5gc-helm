@@ -25,7 +25,7 @@ pipeline {
                 script {
                     sh '''                    
                     echo "Installing Helm release..."
-                    helm install free5gc-helm /home/hieupt/free5gc-helm -n free5gc
+                    helm install free5gc-helm /home/hieupt/free5gc-helm/free5gc/ -n free5gc
                     '''
                 }
             }
