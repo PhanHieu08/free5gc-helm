@@ -31,7 +31,7 @@ pipeline {
 
                         echo "Delete old cert pv"
                         kubectl delete pv cert-pv
-                        sleep 10
+                        sleep 20
                     else
                         echo "No existing release found. Skipping uninstall."
                     fi    
