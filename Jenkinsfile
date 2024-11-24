@@ -27,7 +27,8 @@ pipeline {
                                 timeout=$((timeout-2))
                             fi
                         done
-
+                        
+                        sleep 10
                     else
                         echo "No existing release found. Skipping uninstall."
                     fi    
