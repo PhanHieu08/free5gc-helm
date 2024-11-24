@@ -87,7 +87,7 @@ pipeline {
                             echo "Recreating pods..."
                             if [ $retry -le 5 ]; then
                                 retry=$((retry + 1))
-                                pods=$( kubectl get pods -n free5gc --no-headers | grep -v Running)
+                                pods=$( kubectl get pods -n free5gc --no-headers | grep -v Running | awk '{ print $1 })
                                 for pod in $pods; do
                                     kubectl delete pod -n free5gc $pod
                                 done  
