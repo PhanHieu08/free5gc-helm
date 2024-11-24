@@ -23,7 +23,19 @@ pipeline {
         stage('Reinstall Helm Release') {
             steps {
                 script {
-                    sh '''                    
+                    sh '''
+                    if kubectl get pv | grep cert-pv; then
+                        echo "Cert persistent volumes already exist"
+                    else
+                        echo "Create cert persistent volumes"
+                        kubectl apply -f /home/hieupt/free5gc-helm/cert-pv.yaml
+                    
+                    if kubectl get pv | grep mongo-pv; then
+                        echo "Mongo persistent volumes already exist"    
+                    else
+                        echo "Create mongo persistent volume"
+                        kubectl apply -f /home/hieupt/free5gc/helm/mongo-pv.yaml
+                    
                     echo "Installing Helm release..."
                     helm install free5gc-helm /home/hieupt/free5gc-helm/charts/free5gc/ -n free5gc
                     '''
