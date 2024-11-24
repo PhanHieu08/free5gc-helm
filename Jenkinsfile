@@ -72,7 +72,7 @@ pipeline {
                     
 
                     echo "Killing pod free5gc-helm-free5gc-dbpython..."
-                    kubectl get pods -n free5gc --no-headers | grep '^free5gc-helm-free5gc-dbpython' | awk '{print $1}' | xargs kubectl delete pod -n free5gc
+                    kubectl get pods -n free5gc --no-headers | grep dbpython | awk '{print $1}' | xargs kubectl delete pod -n free5gc
                     sleep 10
 
                     echo "Waiting for other pods to run..."
@@ -95,6 +95,7 @@ pipeline {
                                 echo "Max retries reached. Exiting."
                                 exit 1                                  
                             fi
+                        fi
                     done
                     '''
                 }
