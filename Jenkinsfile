@@ -11,13 +11,13 @@ pipeline {
                     # Check if the release exists
                     if helm ls -n free5gc | grep -q free5gc-helm; then
                         echo "Uninstalling existing Helm release..."
-                        helm uninstall free5gc-helm --namespace free5gc
+                        helm uninstall free5gc-helm -n free5gc
                         
                         # Wait for all pods to terminate
                         echo "Waiting for pods to terminate..."
                         timeout=15 # Set timeout in seconds
                         while [ $timeout -gt 0 ]; do
-                            pods=$(kubectl get pods -n my-namespace --no-headers | wc -l)
+                            pods=$(kubectl get pods -n free5gc --no-headers | wc -l)
                             if [ $pods -eq 0 ]; then
                                 echo "All pods have been terminated."
                                 break
@@ -27,7 +27,7 @@ pipeline {
                                 timeout=$((timeout-2))
                             fi
                         done
-                        
+
                     else
                         echo "No existing release found. Skipping uninstall."
                     fi    
