@@ -55,24 +55,37 @@ pipeline {
 
                     echo "Installing Helm release..."
                     helm install free5gc-helm /home/hieupt/free5gc-helm/charts/free5gc/ -n free5gc
-                    '''
-                }
-            }
-        }
 
-        stage('Wait and Kill dbpython Pod') {
-            steps {
-                script {
-                    sh '''                    
                     echo "Waiting for 10 seconds before killing dbpython pod..."
                     sleep 10
                     
                     echo "Killing pod free5gc-helm-free5gc-dbpython..."
                     kubectl get pods -n free5gc --no-headers | grep '^free5gc-helm-free5gc-dbpython' | awk '{print $1}' | xargs kubectl delete pod -n free5gc
+                    sleep 10
+
+                    echo "Waiting for pods to run..."
+                    retry = 0
+                    while true; do
+                        sleep 10
+                        podNumber=$( kubectl get pods -n free5gc --no-headers | grep -v Running | wc -l)
+                        if [ $podNumber -eq 0 ]; then
+                            echo "All pods start."
+                            break
+                        else
+                            echo "Recreating pods..."
+                            if [ $retry -le 5 ]; then
+                                retry = $((retry + 1))
+                                pods = $( kubectl get pods -n free5gc --no-headers | grep -v Running)
+                                for pod in pods; do
+                                    kubectl delete pod -n free5gc $pod
+                                done                                    
+                            fi
+                    done
                     '''
                 }
             }
         }
+
     }
     post {
         always {
