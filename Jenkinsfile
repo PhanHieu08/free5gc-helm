@@ -11,7 +11,7 @@ pipeline {
                     # Check if the release exists
                     if helm ls -n free5gc | grep -q free5gc-helm; then
                         echo "Uninstalling existing Helm release..."
-                        helm uninstall free-5gc --namespace free5gc
+                        helm uninstall free5gc-helm --namespace free5gc
                         
                     else
                         echo "No existing release found. Skipping uninstall."
