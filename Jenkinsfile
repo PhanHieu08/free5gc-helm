@@ -50,7 +50,7 @@ pipeline {
                         echo "Mongo persistent volumes already exist"    
                     else
                         echo "Create mongo persistent volume"
-                        kubectl apply -f /home/hieupt/free5gc/helm/mongo-pv.yaml
+                        kubectl apply -f /home/hieupt/free5gc-helm/mongo-pv.yaml
                     fi
 
                     echo "Installing Helm release..."
